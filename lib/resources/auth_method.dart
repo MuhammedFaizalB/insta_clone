@@ -1,5 +1,5 @@
 import 'dart:typed_data';
-
+import 'package:insta/models/user.dart' as model;
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:insta/resources/storage_method.dart';
@@ -7,6 +7,17 @@ import 'package:insta/resources/storage_method.dart';
 class AuthMethod {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+
+  Future<model.User> getUserDetails() async {
+    User currentUser = _auth.currentUser!;
+
+    DocumentSnapshot snap = await _firestore
+        .collection("users")
+        .doc(currentUser.uid)
+        .get();
+
+    return model.User.fromSnap(snap);
+  }
 
   Future<String> signUpUser({
     required String userName,
@@ -31,15 +42,21 @@ class AuthMethod {
           file,
           false,
         );
-        await _firestore.collection("users").doc(cred.user!.uid).set({
-          "username": userName,
-          "uid": cred.user!.uid,
-          "email": email,
-          "bio": bio,
-          "followers": [],
-          "following": [],
-          "photoUrl": photoUrl,
-        });
+
+        model.User user = model.User(
+          userName: userName,
+          uid: cred.user!.uid,
+          email: email,
+          bio: bio,
+          followers: [],
+          following: [],
+          photoUrl: photoUrl,
+        );
+
+        await _firestore
+            .collection("users")
+            .doc(cred.user!.uid)
+            .set(user.toJson());
         res = "Success";
       }
     } catch (err) {

@@ -3,6 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:insta/resources/auth_method.dart';
+import 'package:insta/responsive/mobile_screen_layout.dart';
+import 'package:insta/responsive/responsive_layout_screen.dart';
+import 'package:insta/responsive/web_screen_layout.dart';
+import 'package:insta/screens/login_screen.dart';
 import 'package:insta/utils/colors.dart';
 import 'package:insta/utils/utils.dart';
 import 'package:insta/widgets/textfield_input.dart';
@@ -39,6 +43,10 @@ class _SignupScreenState extends State<SignupScreen> {
   }
 
   void signUpUser() async {
+    if (_image == null) {
+      showSnackbar(context, "Please select Profile Image");
+      return;
+    }
     setState(() {
       isLoading = true;
     });
@@ -52,10 +60,25 @@ class _SignupScreenState extends State<SignupScreen> {
 
     if (res != "Success") {
       showSnackbar(context, res);
+      setState(() {
+        isLoading = false;
+      });
+    } else {
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(
+          builder: (context) => ResponsiveLayoutScreen(
+            webScreenLayout: WebScreenLayout(),
+            mobileScreenLayout: MobileScreenLayout(),
+          ),
+        ),
+      );
     }
-    setState(() {
-      isLoading = false;
-    });
+  }
+
+  void navigatorLogIn() {
+    Navigator.of(
+      context,
+    ).push(MaterialPageRoute(builder: (context) => LoginScreen()));
   }
 
   @override
@@ -147,7 +170,7 @@ class _SignupScreenState extends State<SignupScreen> {
                 children: [
                   Text("Have Account ? "),
                   TextButton(
-                    onPressed: () {},
+                    onPressed: navigatorLogIn,
                     child: Text(
                       "Log In",
                       style: TextStyle(fontWeight: FontWeight.bold),

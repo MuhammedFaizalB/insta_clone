@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:insta/resources/auth_method.dart';
+import 'package:insta/responsive/mobile_screen_layout.dart';
+import 'package:insta/responsive/responsive_layout_screen.dart';
+import 'package:insta/responsive/web_screen_layout.dart';
+import 'package:insta/screens/signup_screen.dart';
 import 'package:insta/utils/colors.dart';
 import 'package:insta/utils/utils.dart';
 import 'package:insta/widgets/textfield_input.dart';
@@ -36,11 +40,24 @@ class _LoginScreenState extends State<LoginScreen> {
     if (res != "Success") {
       showSnackbar(context, res);
     } else {
-      showSnackbar(context, res);
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(
+          builder: (context) => ResponsiveLayoutScreen(
+            webScreenLayout: WebScreenLayout(),
+            mobileScreenLayout: MobileScreenLayout(),
+          ),
+        ),
+      );
     }
     setState(() {
       isLoading = false;
     });
+  }
+
+  void navigatorSignUp() {
+    Navigator.of(
+      context,
+    ).push(MaterialPageRoute(builder: (context) => SignupScreen()));
   }
 
   @override
@@ -94,7 +111,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 children: [
                   Text("Don't Have Account ? "),
                   TextButton(
-                    onPressed: () {},
+                    onPressed: navigatorSignUp,
                     child: Text(
                       "Sign Up",
                       style: TextStyle(fontWeight: FontWeight.bold),
