@@ -1,8 +1,10 @@
 import 'dart:typed_data';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:insta/models/post.dart';
 import 'package:insta/resources/storage_method.dart';
+import 'package:insta/utils/utils.dart';
 import 'package:uuid/uuid.dart';
 
 class FirestoreMethod {
@@ -39,5 +41,72 @@ class FirestoreMethod {
       res = err.toString();
     }
     return res;
+  }
+
+  Future<void> likePost(
+    String postId,
+    String uid,
+    List likes,
+    BuildContext context,
+  ) async {
+    try {
+      if (likes.contains(uid)) {
+        await _firestore.collection('posts').doc(postId).update({
+          'likes': FieldValue.arrayRemove([uid]),
+        });
+      } else {
+        await _firestore.collection('posts').doc(postId).update({
+          'likes': FieldValue.arrayUnion([uid]),
+        });
+      }
+    } catch (e) {
+      showSnackbar(context, e.toString());
+    }
+  }
+
+  Future<void> postComment(
+    String postId,
+    String text,
+    String uid,
+    String name,
+    String profilePic,
+    BuildContext context,
+  ) async {
+    try {
+      if (text.isNotEmpty) {
+        String commentId = Uuid().v1();
+        await _firestore
+            .collection('posts')
+            .doc(postId)
+            .collection('comments')
+            .doc(commentId)
+            .set({
+              'profilePic': profilePic,
+              'username': name,
+              'uid': uid,
+              'text': text,
+              'commentid': commentId,
+              'datepublished': DateTime.now(),
+            });
+      } else {
+        showSnackbar(context, "Comment is Empty");
+      }
+    } catch (e) {
+      showSnackbar(context, e.toString());
+    }
+  }
+
+  Future<void> deletePost(String postId, BuildContext context) async {
+    try {
+      await _firestore
+          .collection('posts')
+          .doc(postId)
+          .collection('comments')
+          .doc()
+          .delete();
+      await _firestore.collection('posts').doc(postId).delete();
+    } catch (e) {
+      showSnackbar(context, e.toString());
+    }
   }
 }
