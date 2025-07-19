@@ -34,18 +34,13 @@ class FeedScreen extends StatelessWidget {
               if (snapshot.hasError) {
                 return Center(child: Text("Error Occured"));
               }
-              if (snapshot.hasData) {
-                if (snapshot.data == null) {
-                  return Center(child: Text("No Data Found"));
-                }
-                return ListView.builder(
-                  itemCount: snapshot.data!.docs.length,
-                  itemBuilder: (context, index) {
-                    return PostCard(snap: snapshot.data!.docs[index].data());
-                  },
-                );
-              }
-              return Center(child: Text("No Data Found"));
+
+              return ListView.builder(
+                itemCount: snapshot.data!.docs.length,
+                itemBuilder: (ctx, index) {
+                  return PostCard(snap: snapshot.data!.docs[index].data());
+                },
+              );
             },
       ),
     );

@@ -30,16 +30,19 @@ class _AddPostScreenState extends State<AddPostScreen> {
         userName: username,
         photoImage: profImage,
       );
+
       if (res == "Success") {
         setState(() {
           isLoading = false;
         });
+
         showSnackbar(context, "Posted");
         clearImage();
       } else {
         setState(() {
           isLoading = false;
         });
+
         showSnackbar(context, res);
       }
     } catch (err) {

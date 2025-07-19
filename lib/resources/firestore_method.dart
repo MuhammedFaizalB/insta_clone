@@ -28,7 +28,7 @@ class FirestoreMethod {
       Post post = Post(
         caption: caption,
         uid: uid,
-        UserName: userName,
+        userName: userName,
         postId: postId,
         datePublished: DateTime.now(),
         photoImage: photoImage,
@@ -60,6 +60,7 @@ class FirestoreMethod {
         });
       }
     } catch (e) {
+      if (!context.mounted) return;
       showSnackbar(context, e.toString());
     }
   }
@@ -92,6 +93,7 @@ class FirestoreMethod {
         showSnackbar(context, "Comment is Empty");
       }
     } catch (e) {
+      if (!context.mounted) return;
       showSnackbar(context, e.toString());
     }
   }
@@ -105,6 +107,38 @@ class FirestoreMethod {
           .doc()
           .delete();
       await _firestore.collection('posts').doc(postId).delete();
+    } catch (e) {
+      if (!context.mounted) return;
+      showSnackbar(context, e.toString());
+    }
+  }
+
+  Future<void> followUser(
+    String uid,
+    String followId,
+    BuildContext context,
+  ) async {
+    try {
+      DocumentSnapshot snap = await _firestore
+          .collection("users")
+          .doc(uid)
+          .get();
+      List following = (snap.data()! as dynamic)['following'];
+      if (following.contains(followId)) {
+        await _firestore.collection("users").doc(followId).update({
+          'followers': FieldValue.arrayRemove([uid]),
+        });
+        await _firestore.collection("users").doc(uid).update({
+          'following': FieldValue.arrayRemove([followId]),
+        });
+      } else {
+        await _firestore.collection("users").doc(followId).update({
+          'followers': FieldValue.arrayUnion([uid]),
+        });
+        await _firestore.collection("users").doc(uid).update({
+          'following': FieldValue.arrayUnion([followId]),
+        });
+      }
     } catch (e) {
       showSnackbar(context, e.toString());
     }

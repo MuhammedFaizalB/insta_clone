@@ -59,8 +59,8 @@ class AuthMethod {
             .set(user.toJson());
         res = "Success";
       }
-    } catch (err) {
-      res = err.toString();
+    } on FirebaseAuthException catch (err) {
+      res = err.message.toString();
     }
     return res;
   }
@@ -80,9 +80,13 @@ class AuthMethod {
       } else {
         res = "Please Fill all the fiels";
       }
-    } catch (err) {
-      res = err.toString();
+    } on FirebaseAuthException catch (err) {
+      res = err.message.toString();
     }
     return res;
+  }
+
+  Future<void> signOut() async {
+    await _auth.signOut();
   }
 }
