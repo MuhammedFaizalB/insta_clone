@@ -28,7 +28,7 @@ class _AddPostScreenState extends State<AddPostScreen> {
         file: _file!,
         uid: uid,
         userName: username,
-        photoImage: profImage,
+        profImage: profImage,
       );
 
       if (res == "Success") {

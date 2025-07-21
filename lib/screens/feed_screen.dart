@@ -12,6 +12,7 @@ class FeedScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: mobileBackgroundColor,
+        centerTitle: false,
         title: SvgPicture.asset(
           'assets/ic_instagram.svg',
           color: primaryColor,

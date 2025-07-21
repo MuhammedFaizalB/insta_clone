@@ -128,7 +128,7 @@ class _PostCardState extends State<PostCard> {
               alignment: Alignment.center,
               children: [
                 SizedBox(
-                  height: MediaQuery.of(context).size.width * .45,
+                  height: MediaQuery.of(context).size.width * 1,
                   width: double.infinity,
                   child: Image.network(
                     widget.snap['photoImage'],

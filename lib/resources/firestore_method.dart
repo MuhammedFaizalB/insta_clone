@@ -15,11 +15,11 @@ class FirestoreMethod {
     required Uint8List file,
     required String uid,
     required String userName,
-    required String photoImage,
+    required String profImage,
   }) async {
     String res = "Error Occured";
     try {
-      String photoUrl = await StorageMethod().uploadImageToStorage(
+      String photoImage = await StorageMethod().uploadImageToStorage(
         "Posts",
         file,
         true,
@@ -32,7 +32,7 @@ class FirestoreMethod {
         postId: postId,
         datePublished: DateTime.now(),
         photoImage: photoImage,
-        photoUrl: photoUrl,
+        photoUrl: profImage,
         likes: [],
       );
       await _firestore.collection("posts").doc(postId).set(post.toJson());
