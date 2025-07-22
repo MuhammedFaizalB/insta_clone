@@ -5,6 +5,7 @@ import 'package:insta/providers/user_provider.dart';
 import 'package:insta/resources/firestore_method.dart';
 import 'package:insta/screens/comment_screen.dart';
 import 'package:insta/utils/colors.dart';
+import 'package:insta/utils/global_variables.dart';
 import 'package:insta/utils/utils.dart';
 import 'package:insta/widgets/like_animation.dart';
 import 'package:intl/intl.dart';
@@ -46,6 +47,7 @@ class _PostCardState extends State<PostCard> {
   @override
   Widget build(BuildContext context) {
     final User user = Provider.of<UserProvider>(context).getUser;
+    final width = MediaQuery.of(context).size.width;
     return Container(
       padding: EdgeInsets.symmetric(vertical: 10),
       color: mobileBackgroundColor,
@@ -128,7 +130,7 @@ class _PostCardState extends State<PostCard> {
               alignment: Alignment.center,
               children: [
                 SizedBox(
-                  height: MediaQuery.of(context).size.width * 1,
+                  height: width > webScreenSize ? width * .3 : width * 1,
                   width: double.infinity,
                   child: Image.network(
                     widget.snap['photoImage'],

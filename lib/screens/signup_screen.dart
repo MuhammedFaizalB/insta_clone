@@ -8,6 +8,7 @@ import 'package:insta/responsive/responsive_layout_screen.dart';
 import 'package:insta/responsive/web_screen_layout.dart';
 import 'package:insta/screens/login_screen.dart';
 import 'package:insta/utils/colors.dart';
+import 'package:insta/utils/global_variables.dart';
 import 'package:insta/utils/utils.dart';
 import 'package:insta/widgets/textfield_input.dart';
 
@@ -86,7 +87,11 @@ class _SignupScreenState extends State<SignupScreen> {
     return Scaffold(
       body: SafeArea(
         child: Container(
-          padding: EdgeInsets.symmetric(horizontal: 32),
+          padding: MediaQuery.of(context).size.width > webScreenSize
+              ? EdgeInsets.symmetric(
+                  horizontal: MediaQuery.of(context).size.width / 3,
+                )
+              : EdgeInsets.symmetric(horizontal: 32),
           width: double.infinity,
 
           child: Column(
@@ -109,10 +114,9 @@ class _SignupScreenState extends State<SignupScreen> {
                           backgroundImage: MemoryImage(_image!),
                         )
                       : CircleAvatar(
+                          backgroundColor: Colors.blueGrey,
                           radius: 64,
-                          backgroundImage: NetworkImage(
-                            'https://pbs.twimg.com/profile_images/1278568560478961665/L-xhbKsU_400x400.jpg',
-                          ),
+                          child: Icon(Icons.person, size: 55),
                         ),
                   Positioned(
                     bottom: -10,
